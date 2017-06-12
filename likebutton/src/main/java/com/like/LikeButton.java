@@ -162,13 +162,7 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
 
         icon.setImageDrawable(isChecked ? likeDrawable : unLikeDrawable);
 
-        if (likeListener != null) {
-            if (isChecked) {
-                likeListener.liked(this);
-            } else {
-                likeListener.unLiked(this);
-            }
-        }
+
 
         if (animatorSet != null) {
             animatorSet.cancel();
@@ -218,12 +212,19 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
 
             animatorSet.addListener(new AnimatorListenerAdapter() {
                 @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    callOnLikeListener();
+                }
+
+                @Override
                 public void onAnimationCancel(Animator animation) {
                     circleView.setInnerCircleRadiusProgress(0);
                     circleView.setOuterCircleRadiusProgress(0);
                     dotsView.setCurrentProgress(0);
                     icon.setScaleX(1);
                     icon.setScaleY(1);
+                    callOnLikeListener();
                 }
             });
 
@@ -275,6 +276,15 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
         return true;
     }
 
+    private void callOnLikeListener(){
+        if (likeListener != null) {
+            if (isChecked) {
+                likeListener.liked(this);
+            } else {
+                likeListener.unLiked(this);
+            }
+        }
+    }
     /**
      * This drawable is shown when the button is a liked state.
      *
