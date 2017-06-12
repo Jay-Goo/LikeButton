@@ -229,6 +229,8 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
             });
 
             animatorSet.start();
+        }else {
+            callOnLikeListener();
         }
     }
 
